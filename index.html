@@ -300,13 +300,6 @@
         </div>
     </div>
     <script>
-        const onExpand = (item) => {
-            if (item.getAttribute('data-mode') === 'expanded') {
-                item.removeAttribute('data-mode');
-            } else {
-                item.setAttribute('data-mode', 'expanded')
-            }
-        }
         initVideo(
             document.getElementById('video-1'),
             `http://${location.hostname}:9191/master?url=http%3A%2F%2F${location.hostname}%3A3102%2Fstreams%2Fsosed%2Fmaster.m3u8`
