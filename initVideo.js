@@ -59,9 +59,6 @@ function initVideo(video, url) {
     video.addEventListener('click', () => {
         video.paused ? play(video) : stop(video);
     });
-    video.addEventListener('dblclick', () => {
-        expand(video);
-    });
     if (Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(url);
