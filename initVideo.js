@@ -7,12 +7,14 @@ const play = (video) => {
 
 const expand = (video) => {
     video.setAttribute('data-mode', 'expanded')
-    document.body.setAttribute('data-mode', 'expanded');
+    video.parentElement.parentElement.parentElement.setAttribute('data-mode', 'expanded');
+    document.querySelector('.layout').setAttribute('data-mode', 'expanded');
 }
 
 const colapse = (video) => {
-    video.setAttribute('data-mode', 'colapsed')
-    document.body.setAttribute('data-mode', 'colapsed');
+    video.removeAttribute('data-mode')
+    video.parentElement.parentElement.parentElement.removeAttribute('data-mode');
+    document.querySelector('.layout').removeAttribute('data-mode');
 }
 
 const getBrightness = (video) => {

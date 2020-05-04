@@ -9,33 +9,80 @@
         * {
             box-sizing: border-box;
         }
-        /* @keyframes video-animation {
-            from {
-                width: 100%;
+        body {
+            --video-width: 600px;
+            --video-height: calc(var(--video-width) / 1.78);
+            margin: 0px;
+        }
+        @media screen and (max-width: 1200px) {
+            body {
+                --video-width: 300px;
             }
-            to {
-                width: 200%;
-            }
-        } */
-        /* @keyframes video-animation {
-            from {
-                position: relative;
-                width: 100%
-            }
-            to {
-                position: absolute;
-                width: 200%
-            }
-        } */
-        @keyframes layout-animation {
-            from {
-                grid-template-columns: 1fr 1fr;
-            }
-            to {
-                grid-template-columns: 1fr;
+            .range input {
+                width: 50px;
             }
         }
-        @keyframes video-hide-animation {
+        .layout {
+            display: grid;
+            position: relative;
+            grid-template-columns: 1fr 1fr;
+            width: calc(var(--video-width) * 2);
+        }
+        .layout__item {
+            height: var(--video-height);
+        }
+
+        .layout__inner {
+            height: 100%;
+        }
+
+        @keyframes layout-animation_lt {
+            from {
+                height: var(--video-height);
+                width: var(--video-width);
+            }
+            to {
+                height: calc(var(--video-height) * 2);
+                width: calc(var(--video-width) * 2);
+            }
+        }
+        @keyframes layout-animation_rt {
+            from {
+                height: var(--video-height);
+                width: var(--video-width);
+                transform: translate(0, 0)
+            }
+            to {
+                height: calc(var(--video-height) * 2);
+                width: calc(var(--video-width) * 2);
+                transform: translate(calc(0px - var(--video-width)), 0)
+            }
+        }
+        @keyframes layout-animation_lb {
+            from {
+                height: var(--video-height);
+                width: var(--video-width);
+                transform: translate(0, 0)
+            }
+            to {
+                height: calc(var(--video-height) * 2);
+                width: calc(var(--video-width) * 2);
+                transform: translate(0, calc(0px - var(--video-height)))
+            }
+        }
+        @keyframes layout-animation_rb {
+            from {
+                height: var(--video-height);
+                width: var(--video-width);
+                transform: translate(0, 0)
+            }
+            to {
+                height: calc(var(--video-height) * 2);
+                width: calc(var(--video-width) * 2);
+                transform: translate(calc(0px - var(--video-width)), calc(0px - var(--video-height)))
+            }
+        }
+        @keyframes layout-animation_hide {
             from {
                 opacity: 1;
             }
@@ -43,45 +90,45 @@
                 opacity: 0;
             }
         }
-        body {
-            margin: 0px;
-            display: grid;
+        .layout__item[data-mode="expanded"] .layout__inner {
+            position: absolute;
+            height: 100%;
+            width: 100%;
         }
-        @media screen and (min-width: 900px) {
-            body {
-                grid-template-columns: 1fr 1fr;
-            }
-            /* body[data-mode="expanded"] .video {
-                animation-name: video-animation;
-                animation-duration: 4s;
-            } */
-            body[data-mode="expanded"] {
-                grid-template-columns: 1fr;
-                animation-name: layout-animation;
-                animation-duration: 1s;
-            }
-            /* body[data-mode="expanded"] .video {
-                animation-name: video-animation;
-                animation-duration: 2s;
-            }
-
-            body[data-mode="expanded"] .video__stream:not([data-mode="expanded"]) {
-                animation-name: video-hide-animation;
-                animation-duration: 2s;
-                opacity: 0;
-            } */
+        .layout__item[data-mode="expanded"] .layout__inner_lt {
+            animation-name: layout-animation_lt;
+            animation-duration: 1s;
         }
-
-        body[data-mode="expanded"] .video__stream:not([data-mode="expanded"]) {
-            display: none;
+        .layout__item[data-mode="expanded"] .layout__inner_rt {
+            animation-name: layout-animation_rt;
+            animation-duration: 1s;
+            transform: translate(calc(0px - var(--video-width)), 0)
+        }
+        .layout__item[data-mode="expanded"] .layout__inner_lb {
+            animation-name: layout-animation_lb;
+            animation-duration: 1s;
+            transform: translate(0, calc(0px - var(--video-height)))
+        }
+        .layout__item[data-mode="expanded"] .layout__inner_rb {
+            animation-name: layout-animation_rb;
+            animation-duration: 1s;
+            transform: translate(calc(0px - var(--video-width)), calc(0px - var(--video-height)))
+        }
+        .layout[data-mode="expanded"] .layout__item:not([data-mode="expanded"]) {
+            animation-name: layout-animation_hide;
+            animation-duration: 1s;
+            opacity: 0;
+            z-index: -1;
         }
 
         .video {
+            height: 100%;
             font-size: 0;
             text-align: center;
         }
         .video__stream {
-            max-width: 100%
+            max-width: 100%;
+            height: 100%;
         }
         .video:hover .video__control {
             display: block;
@@ -131,6 +178,7 @@
             display: flex;
             flex-direction: column;
             align-items: start;
+            justify-items: stretch;
             margin: 5px 0;
         }
         .label {
@@ -141,120 +189,143 @@
     </style>
 </head>
 <body>
-<div class="video">
-    <video id="video-1" class="video__stream" muted></video>
-    <div class="video__control">
-        <div class="video__control-inner">
-            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
-            <div class="range">
-                <span class="label">Brightness</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+    <div class="layout">
+        <div class="layout__item">
+            <div class="layout__inner layout__inner_lt">
+                <div class="video">
+                    <video id="video-1" class="video__stream" muted ondblclick="expand(this)"></video>
+                    <div class="video__control">
+                        <div class="video__control-inner">
+                            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+                            <div class="range">
+                                <span class="label">Brightness</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Contrast</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Volume</span>
+                                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
+                            </div>
+                            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="range">
-                <span class="label">Contrast</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+        </div>
+        <div class="layout__item">
+            <div class="layout__inner layout__inner_rt">
+                <div class="video">
+                    <video id="video-2" class="video__stream" muted ondblclick="expand(this)"></video>
+                    <div class="video__control">
+                        <div class="video__control-inner">
+                            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+                            <div class="range">
+                                <span class="label">Brightness</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Contrast</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Volume</span>
+                                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
+                            </div>
+                            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="range">
-                <span class="label">Volume</span>
-                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
+        </div>
+        <div class="layout__item">
+            <div class="layout__inner layout__inner_lb">
+                <div class="video">
+                    <video id="video-3" class="video__stream" muted ondblclick="expand(this)"></video>
+                    <div class="video__control">
+                        <div class="video__control-inner">
+                            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+                            <div class="range">
+                                <span class="label">Brightness</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Contrast</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Volume</span>
+                                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
+                            </div>
+                            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+        </div>
+        <div class="layout__item">
+            <div class="layout__inner layout__inner_rb">
+                <div class="video">
+                    <video id="video-4" class="video__stream" muted ondblclick="expand(this)"></video>
+                    <div class="video__control">
+                        <div class="video__control-inner">
+                            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+                            <div class="range">
+                                <span class="label">Brightness</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Contrast</span>
+                                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+                            </div>
+                            <div class="range">
+                                <span class="label">Volume</span>
+                                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
+                            </div>
+                            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+                            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="video">
-    <video id="video-2" class="video__stream" muted></video>
-    <div class="video__control">
-        <div class="video__control-inner">
-            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
-            <div class="range">
-                <span class="label">Brightness</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
-            </div>
-            <div class="range">
-                <span class="label">Contrast</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
-            </div>
-            <div class="range">
-                <span class="label">Volume</span>
-                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
-            </div>
-            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
-        </div>
-    </div>
-</div>
-<div class="video">
-    <video id="video-3" class="video__stream" muted></video>
-    <div class="video__control">
-        <div class="video__control-inner">
-            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
-            <div class="range">
-                <span class="label">Brightness</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
-            </div>
-            <div class="range">
-                <span class="label">Contrast</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
-            </div>
-            <div class="range">
-                <span class="label">Volume</span>
-                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
-            </div>
-            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
-        </div>
-    </div>
-</div>
-<div class="video">
-    <video id="video-4" class="video__stream" muted></video>
-    <div class="video__control">
-        <div class="video__control-inner">
-            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
-            <div class="range">
-                <span class="label">Brightness</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
-            </div>
-            <div class="range">
-                <span class="label">Contrast</span>
-                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
-            </div>
-            <div class="range">
-                <span class="label">Volume</span>
-                <input type="range" min="0" max="100" value="100" onchange="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)" oninput="changeVolume(this.offsetParent.previousElementSibling, this.value / 100)">
-            </div>
-            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
-            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
-        </div>
-    </div>
-</div>
-<script>
-    initVideo(
-        document.getElementById('video-1'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fsosed%2Fmaster.m3u8'
-    );
+    <script>
+        const onExpand = (item) => {
+            if (item.getAttribute('data-mode') === 'expanded') {
+                item.removeAttribute('data-mode');
+            } else {
+                item.setAttribute('data-mode', 'expanded')
+            }
+        }
+        initVideo(
+            document.getElementById('video-1'),
+            'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fsosed%2Fmaster.m3u8'
+        );
 
-    initVideo(
-        document.getElementById('video-2'),
-        'http://localhost:9191/live?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fstairs%2Fmaster.m3u8'
-    );
+        initVideo(
+            document.getElementById('video-2'),
+            'http://localhost:9191/live?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fstairs%2Fmaster.m3u8'
+        );
 
-    initVideo(
-        document.getElementById('video-3'),
-        'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fdog%2Fmaster.m3u8'
-    );
+        initVideo(
+            document.getElementById('video-3'),
+            'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fdog%2Fmaster.m3u8'
+        );
 
-    initVideo(
-        document.getElementById('video-4'),
-        'http://localhost:9191/live?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fstreet%2Fmaster.m3u8'
-    );
-</script>
-
-
+        initVideo(
+            document.getElementById('video-4'),
+            'http://localhost:9191/live?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fstreet%2Fmaster.m3u8'
+        );
+    </script>
 </body>
 </html>
