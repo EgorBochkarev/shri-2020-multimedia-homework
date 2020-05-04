@@ -127,17 +127,34 @@
         .video__stream[data-mode="expanded"] ~ .video__control .icon.expand {
             display: none;
         }
+        .range {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            margin: 5px 0;
+        }
+        .label {
+            margin-left: 3px;
+            font-size: 10px;
+            color: white;
+        }
     </style>
 </head>
 <body>
 <div class="video">
-    <video id="video-1" class="video__stream" muted>
-        <!-- <source src="cats.mp4" type="video/mp4"> -->
-    </video>
+    <video id="video-1" class="video__stream" muted></video>
     <div class="video__control">
         <div class="video__control-inner">
             <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
             <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <div class="range">
+                <span class="label">Brightness</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+            </div>
+            <div class="range">
+                <span class="label">Contrast</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+            </div>
             <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
             <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
         </div>
@@ -149,17 +166,34 @@
         <div class="video__control-inner">
             <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
             <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <div class="range">
+                <span class="label">Brightness</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+            </div>
+            <div class="range">
+                <span class="label">Contrast</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+            </div>
             <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
             <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
         </div>
     </div>
 </div>
+<br/>
 <div class="video">
     <video id="video-3" class="video__stream" muted></video>
     <div class="video__control">
         <div class="video__control-inner">
             <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
             <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <div class="range">
+                <span class="label">Brightness</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+            </div>
+            <div class="range">
+                <span class="label">Contrast</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+            </div>
             <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
             <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
         </div>
@@ -171,6 +205,14 @@
         <div class="video__control-inner">
             <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
             <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <div class="range">
+                <span class="label">Brightness</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeBrightness(this.offsetParent.previousElementSibling, this.value)" oninput="changeBrightness(this.offsetParent.previousElementSibling, this.value)">
+            </div>
+            <div class="range">
+                <span class="label">Contrast</span>
+                <input type="range" min="0" max="200" value="100" onchange="changeContrast(this.offsetParent.previousElementSibling, this.value)" oninput="changeContrast(this.offsetParent.previousElementSibling, this.value)">
+            </div>
             <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
             <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
         </div>

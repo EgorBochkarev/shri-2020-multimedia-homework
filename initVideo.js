@@ -15,6 +15,32 @@ const colapse = (video) => {
     document.body.setAttribute('data-mode', 'colapsed');
 }
 
+const getBrightness = (video) => {
+    const match = video.style.filter.match(/brightness\((\d*)\)/);
+    if (match) {
+        return match[1];
+    } else {
+        return 100;
+    }
+}
+const getContrast = (video) => {
+    const match = video.style.filter.match(/contrast\((\d*)\)/);
+    if (match) {
+        return match[1];
+    } else {
+        return 100;
+    }
+}
+
+const changeBrightness = (video, brightness) => {
+    const contrast = getContrast(video);
+    video.style.filter = `contrast(${contrast}%) brightness(${brightness}%)`
+}
+
+const changeContrast = (video, contrast) => {
+    const brightness = getBrightness(video);
+    video.style.filter = `contrast(${contrast}%) brightness(${brightness}%)`
+}
 
 function initVideo(video, url) {
     video.addEventListener('playing', () => {
