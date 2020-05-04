@@ -6,19 +6,176 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="initVideo.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+        /* @keyframes video-animation {
+            from {
+                width: 100%;
+            }
+            to {
+                width: 200%;
+            }
+        } */
+        /* @keyframes video-animation {
+            from {
+                position: relative;
+                width: 100%
+            }
+            to {
+                position: absolute;
+                width: 200%
+            }
+        } */
+        @keyframes layout-animation {
+            from {
+                grid-template-columns: 1fr 1fr;
+            }
+            to {
+                grid-template-columns: 1fr;
+            }
+        }
+        @keyframes video-hide-animation {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        body {
+            margin: 0px;
+            display: grid;
+        }
+        @media screen and (min-width: 900px) {
+            body {
+                grid-template-columns: 1fr 1fr;
+            }
+            /* body[data-mode="expanded"] .video {
+                animation-name: video-animation;
+                animation-duration: 4s;
+            } */
+            body[data-mode="expanded"] {
+                grid-template-columns: 1fr;
+                animation-name: layout-animation;
+                animation-duration: 1s;
+            }
+            /* body[data-mode="expanded"] .video {
+                animation-name: video-animation;
+                animation-duration: 2s;
+            }
+
+            body[data-mode="expanded"] .video__stream:not([data-mode="expanded"]) {
+                animation-name: video-hide-animation;
+                animation-duration: 2s;
+                opacity: 0;
+            } */
+        }
+
+        body[data-mode="expanded"] .video__stream:not([data-mode="expanded"]) {
+            display: none;
+        }
+
         .video {
-            width: 300px;
-            height: 200px;
+            font-size: 0;
+            text-align: center;
+        }
+        .video__stream {
+            max-width: 100%
+        }
+        .video:hover .video__control {
+            display: block;
+        }
+        .video__control {
+            width: 100%;
+            height: 0;
+            position: relative;
+            display: none;
+            bottom: 45px;
+        }
+        .video__control:hover {
+            display: block;
+        }
+        .video__control-inner {
+            margin: 0px 5px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+        }
+        .icon {
+            height: 16px;
+            margin: 12px;
+        }
+        .icon.pause {
+            display: none;
+        }
+        .video__stream[data-state="played"] ~ .video__control .icon.pause {
+            display: inline;
+        }
+        .video__stream[data-state="played"] ~ .video__control .icon.play {
+            display: none;
+        }
+
+        .icon.colapse {
+            display: none;
+        }
+        .video__stream[data-mode="expanded"] ~ .video__control .icon.colapse {
+            display: inline;
+        }
+        .video__stream[data-mode="expanded"] ~ .video__control .icon.expand {
+            display: none;
         }
     </style>
 </head>
 <body>
-
-<video id="video-1" class="video" controls muted autoplay></video>
-<video id="video-2" class="video" controls muted autoplay></video>
-<br>
-<video id="video-3" class="video" controls muted autoplay></video>
-<video id="video-4" class="video" controls muted autoplay></video>
+<div class="video">
+    <video id="video-1" class="video__stream" muted>
+        <!-- <source src="cats.mp4" type="video/mp4"> -->
+    </video>
+    <div class="video__control">
+        <div class="video__control-inner">
+            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+        </div>
+    </div>
+</div>
+<div class="video">
+    <video id="video-2" class="video__stream" muted></video>
+    <div class="video__control">
+        <div class="video__control-inner">
+            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+        </div>
+    </div>
+</div>
+<div class="video">
+    <video id="video-3" class="video__stream" muted></video>
+    <div class="video__control">
+        <div class="video__control-inner">
+            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+        </div>
+    </div>
+</div>
+<div class="video">
+    <video id="video-4" class="video__stream" muted></video>
+    <div class="video__control">
+        <div class="video__control-inner">
+            <img class="icon play" src="./icons/play.svg" onclick="play(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon pause" src="./icons/pause.svg" onclick="stop(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon expand" src="./icons/expand.svg" onclick="expand(this.offsetParent.previousElementSibling)"></img>
+            <img class="icon colapse" src="./icons/compress.svg" onclick="colapse(this.offsetParent.previousElementSibling)"></img>
+        </div>
+    </div>
+</div>
 <script>
     initVideo(
         document.getElementById('video-1'),
@@ -39,7 +196,6 @@
         document.getElementById('video-4'),
         'http://localhost:9191/live?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fstreet%2Fmaster.m3u8'
     );
-
 </script>
 
 
