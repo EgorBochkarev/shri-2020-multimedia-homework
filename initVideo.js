@@ -42,6 +42,11 @@ const changeContrast = (video, contrast) => {
     video.style.filter = `contrast(${contrast}%) brightness(${brightness}%)`
 }
 
+const changeVolume = (video, volume) => {
+    video.muted = false;
+    video.volume = volume;
+}
+
 function initVideo(video, url) {
     video.addEventListener('playing', () => {
         video.setAttribute('data-state', 'played')
